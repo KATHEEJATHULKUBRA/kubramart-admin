@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 280 20% 97%;
+  --foreground: 280 10% 10%;
+  --muted: 280 10% 94%;
+  --muted-foreground: 280 5% 45%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 280 10% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 280 10% 10%;
+  --border: 280 10% 90%;
+  --input: 280 10% 90%;
+  --primary: 300 82% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 328 73% 51%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 280 10% 96%;
+  --accent-foreground: 280 10% 25%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 300 82% 43%;
+  --radius: 0.5rem;
+  
+  /* Chart colors */
+  --chart-1: 300 82% 43%;
+  --chart-2: 328 73% 51%;
+  --chart-3: 262 83% 58%;
+  --chart-4: 199 89% 48%;
+  --chart-5: 43 96% 58%;
+  
+  /* Sidebar colors */
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 280 10% 10%;
+  --sidebar-primary: 300 82% 43%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 280 10% 96%;
+  --sidebar-accent-foreground: 280 10% 25%;
+  --sidebar-border: 280 10% 90%;
+  --sidebar-ring: 300 82% 43%;
+}
+
+.dark {
+  --background: 280 15% 10%;
+  --foreground: 0 0% 98%;
+  --muted: 280 10% 20%;
+  --muted-foreground: 280 5% 65%;
+  --popover: 280 15% 10%;
+  --popover-foreground: 0 0% 98%;
+  --card: 280 15% 15%;
+  --card-foreground: 0 0% 98%;
+  --border: 280 10% 25%;
+  --input: 280 10% 25%;
+  --primary: 300 82% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 328 73% 51%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 280 10% 20%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 300 82% 43%;
+  
+  /* Chart colors remain the same */
+  
+  /* Sidebar colors dark mode */
+  --sidebar-background: 280 15% 15%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 300 82% 43%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 280 10% 20%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 280 10% 25%;
+  --sidebar-ring: 300 82% 43%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Auth container background gradient */
+.auth-container {
+  background: linear-gradient(135deg, hsl(300 82% 43% / 0.8) 0%, hsl(328 73% 51% / 0.8) 100%);
+}
+
+/* Transition for pages */
+.page-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Active sidebar link style */
+.sidebar-link.active {
+  @apply bg-primary/10 border-l-4 border-primary;
+}
+
+/* Sidebar transition */
+.sidebar {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Additional utility classes */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

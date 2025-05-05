@@ -1,0 +1,319 @@
+import { users, type User, type InsertUser } from "@shared/schema";
+import { shops, type Shop, type InsertShop } from "@shared/schema";
+import { shopCategories, type ShopCategory, type InsertShopCategory } from "@shared/schema";
+import { orders, type Order, type InsertOrder } from "@shared/schema";
+import { transactions, type Transaction, type InsertTransaction } from "@shared/schema";
+import session from "express-session";
+import createMemoryStore from "memorystore";
+
+const MemoryStore = createMemoryStore(session);
+
+// Interface with all CRUD methods
+export interface IStorage {
+  // User methods
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
+  
+  // Shop category methods
+  getShopCategories(): Promise<ShopCategory[]>;
+  getShopCategory(id: number): Promise<ShopCategory | undefined>;
+  createShopCategory(category: InsertShopCategory): Promise<ShopCategory>;
+  updateShopCategory(id: number, category: Partial<InsertShopCategory>): Promise<ShopCategory | undefined>;
+  deleteShopCategory(id: number): Promise<boolean>;
+  
+  // Shop methods
+  getShops(): Promise<Shop[]>;
+  getShopsByCategory(categoryId: number): Promise<Shop[]>;
+  getShop(id: number): Promise<Shop | undefined>;
+  createShop(shop: InsertShop): Promise<Shop>;
+  updateShop(id: number, shop: Partial<InsertShop>): Promise<Shop | undefined>;
+  deleteShop(id: number): Promise<boolean>;
+  
+  // Order methods
+  getOrders(): Promise<Order[]>;
+  getOrdersByShop(shopId: number): Promise<Order[]>;
+  getOrder(id: number): Promise<Order | undefined>;
+  createOrder(order: InsertOrder): Promise<Order>;
+  updateOrder(id: number, order: Partial<InsertOrder>): Promise<Order | undefined>;
+  
+  // Transaction methods
+  getTransactions(): Promise<Transaction[]>;
+  getTransactionsByOrder(orderId: number): Promise<Transaction[]>;
+  getTransaction(id: number): Promise<Transaction | undefined>;
+  createTransaction(transaction: InsertTransaction): Promise<Transaction>;
+  
+  // Session store for authentication
+  sessionStore: session.SessionStore;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private shopCategories: Map<number, ShopCategory>;
+  private shops: Map<number, Shop>;
+  private orders: Map<number, Order>;
+  private transactions: Map<number, Transaction>;
+  private userCurrentId: number;
+  private categoryCurrentId: number;
+  private shopCurrentId: number;
+  private orderCurrentId: number;
+  private transactionCurrentId: number;
+  sessionStore: session.SessionStore;
+
+  constructor() {
+    this.users = new Map();
+    this.shopCategories = new Map();
+    this.shops = new Map();
+    this.orders = new Map();
+    this.transactions = new Map();
+    this.userCurrentId = 1;
+    this.categoryCurrentId = 1;
+    this.shopCurrentId = 1;
+    this.orderCurrentId = 1;
+    this.transactionCurrentId = 1;
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // 24 hours
+    });
+    
+    // Add some initial sample data
+    this.seedSampleData();
+  }
+
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username,
+    );
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.userCurrentId++;
+    const user: User = { ...insertUser, id };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updatedUser = { ...user, ...userData };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  // Shop category methods
+  async getShopCategories(): Promise<ShopCategory[]> {
+    return Array.from(this.shopCategories.values());
+  }
+
+  async getShopCategory(id: number): Promise<ShopCategory | undefined> {
+    return this.shopCategories.get(id);
+  }
+
+  async createShopCategory(category: InsertShopCategory): Promise<ShopCategory> {
+    const id = this.categoryCurrentId++;
+    const newCategory: ShopCategory = { ...category, id };
+    this.shopCategories.set(id, newCategory);
+    return newCategory;
+  }
+
+  async updateShopCategory(id: number, categoryData: Partial<InsertShopCategory>): Promise<ShopCategory | undefined> {
+    const category = await this.getShopCategory(id);
+    if (!category) return undefined;
+    
+    const updatedCategory = { ...category, ...categoryData };
+    this.shopCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+
+  async deleteShopCategory(id: number): Promise<boolean> {
+    return this.shopCategories.delete(id);
+  }
+
+  // Shop methods
+  async getShops(): Promise<Shop[]> {
+    return Array.from(this.shops.values());
+  }
+
+  async getShopsByCategory(categoryId: number): Promise<Shop[]> {
+    return Array.from(this.shops.values()).filter(
+      (shop) => shop.categoryId === categoryId,
+    );
+  }
+
+  async getShop(id: number): Promise<Shop | undefined> {
+    return this.shops.get(id);
+  }
+
+  async createShop(shop: InsertShop): Promise<Shop> {
+    const id = this.shopCurrentId++;
+    const newShop: Shop = { ...shop, id };
+    this.shops.set(id, newShop);
+    return newShop;
+  }
+
+  async updateShop(id: number, shopData: Partial<InsertShop>): Promise<Shop | undefined> {
+    const shop = await this.getShop(id);
+    if (!shop) return undefined;
+    
+    const updatedShop = { ...shop, ...shopData };
+    this.shops.set(id, updatedShop);
+    return updatedShop;
+  }
+
+  async deleteShop(id: number): Promise<boolean> {
+    return this.shops.delete(id);
+  }
+
+  // Order methods
+  async getOrders(): Promise<Order[]> {
+    return Array.from(this.orders.values());
+  }
+
+  async getOrdersByShop(shopId: number): Promise<Order[]> {
+    return Array.from(this.orders.values()).filter(
+      (order) => order.shopId === shopId,
+    );
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const id = this.orderCurrentId++;
+    const newOrder: Order = { ...order, id };
+    this.orders.set(id, newOrder);
+    return newOrder;
+  }
+
+  async updateOrder(id: number, orderData: Partial<InsertOrder>): Promise<Order | undefined> {
+    const order = await this.getOrder(id);
+    if (!order) return undefined;
+    
+    const updatedOrder = { ...order, ...orderData };
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  // Transaction methods
+  async getTransactions(): Promise<Transaction[]> {
+    return Array.from(this.transactions.values());
+  }
+
+  async getTransactionsByOrder(orderId: number): Promise<Transaction[]> {
+    return Array.from(this.transactions.values()).filter(
+      (transaction) => transaction.orderId === orderId,
+    );
+  }
+
+  async getTransaction(id: number): Promise<Transaction | undefined> {
+    return this.transactions.get(id);
+  }
+
+  async createTransaction(transaction: InsertTransaction): Promise<Transaction> {
+    const id = this.transactionCurrentId++;
+    const newTransaction: Transaction = { ...transaction, id };
+    this.transactions.set(id, newTransaction);
+    return newTransaction;
+  }
+
+  // Seed initial data for testing
+  private seedSampleData() {
+    // Categories
+    const groceryCategory: ShopCategory = {
+      id: this.categoryCurrentId++,
+      name: "Grocery Stores",
+      description: "General grocery stores with a wide range of products",
+      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+    };
+    
+    const organicCategory: ShopCategory = {
+      id: this.categoryCurrentId++,
+      name: "Organic Markets",
+      description: "Specialized stores with organic and natural products",
+      image: "https://images.unsplash.com/photo-1578862973954-ad04ebae8729?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+    };
+    
+    this.shopCategories.set(groceryCategory.id, groceryCategory);
+    this.shopCategories.set(organicCategory.id, organicCategory);
+
+    // Shops
+    const farmFresh: Shop = {
+      id: this.shopCurrentId++,
+      name: "Farm Fresh Groceries",
+      description: "The freshest produce direct from farms",
+      image: "https://images.unsplash.com/photo-1578862973954-ad04ebae8729?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      address: "123 Market St, San Francisco, CA",
+      categoryId: groceryCategory.id
+    };
+    
+    const organicDelights: Shop = {
+      id: this.shopCurrentId++,
+      name: "Organic Delights",
+      description: "100% organic produce and products",
+      image: "https://images.unsplash.com/photo-1578862973954-ad04ebae8729?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      address: "456 Organic Ave, Portland, OR",
+      categoryId: organicCategory.id
+    };
+    
+    this.shops.set(farmFresh.id, farmFresh);
+    this.shops.set(organicDelights.id, organicDelights);
+
+    // Orders
+    const order1: Order = {
+      id: this.orderCurrentId++,
+      orderNumber: "ORD-2458",
+      customerName: "Sarah Johnson",
+      customerEmail: "sarah@example.com",
+      shopId: farmFresh.id,
+      amount: "125.00",
+      status: "processing",
+      date: new Date()
+    };
+    
+    const order2: Order = {
+      id: this.orderCurrentId++,
+      orderNumber: "ORD-2457",
+      customerName: "Michael Brown",
+      customerEmail: "michael@example.com",
+      shopId: organicDelights.id,
+      amount: "89.50",
+      status: "delivered",
+      date: new Date()
+    };
+    
+    this.orders.set(order1.id, order1);
+    this.orders.set(order2.id, order2);
+
+    // Transactions
+    const transaction1: Transaction = {
+      id: this.transactionCurrentId++,
+      transactionId: "TRX-12345",
+      orderId: order1.id,
+      amount: "125.00",
+      paymentMethod: "credit_card",
+      date: new Date()
+    };
+    
+    const transaction2: Transaction = {
+      id: this.transactionCurrentId++,
+      transactionId: "TRX-12346",
+      orderId: order2.id,
+      amount: "89.50",
+      paymentMethod: "paypal",
+      date: new Date()
+    };
+    
+    this.transactions.set(transaction1.id, transaction1);
+    this.transactions.set(transaction2.id, transaction2);
+  }
+}
+
+export const storage = new MemStorage();
