@@ -109,12 +109,12 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 auth-container">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-8 page-transition">
-        <div className="flex justify-center mb-6">
-          <Logo size="lg" />
+        <div className="flex justify-center mb-10">
+          <Logo size="xl" />
         </div>
 
         <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-8">
-          {isLoginView ? "Login to Kubra Market Admin" : "Create Admin Account"}
+          {isLoginView ? "Admin Login" : "Create Admin Account"}
         </h1>
 
         {isLoginView ? (
