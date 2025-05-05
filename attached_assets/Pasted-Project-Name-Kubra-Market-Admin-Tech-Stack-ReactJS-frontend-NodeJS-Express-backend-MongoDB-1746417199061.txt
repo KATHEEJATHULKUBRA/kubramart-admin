@@ -1,0 +1,156 @@
+Project Name: Kubra Market Admin
+Tech Stack: ReactJS (frontend), NodeJS + Express (backend), MongoDB (database)
+
+Goal: Build a professional, fully responsive admin panel web app for “Kubra Market” using a theme that matches the attached logo (basket.png). The design should be clean, modern, and production-ready, with smooth transitions and proper component structure.
+
+🔐 Authentication Flow:
+Signup Page
+
+Modern, responsive design using the logo’s color scheme (pinks, purples).
+
+Includes input validation (email, password strength).
+
+Shows “Already have an account? Login” as a clickable text.
+
+On click, it should navigate to the login page.
+
+Login Page
+
+Same design as signup for UI consistency.
+
+Input validations.
+
+Successful login redirects to the dashboard.
+
+📊 Dashboard Page:
+Layout:
+
+Left: Sidebar Navigation
+
+Right-Top: Logo, notification bell, admin profile icon.
+
+Features:
+
+Sidebar with icons + labels:
+
+Dashboard (overview)
+
+Shop Category
+
+List Shop
+
+Orders
+
+Transactions
+
+Sales Analytics
+
+Logout (with icon)
+
+Notifications:
+
+Clicking bell shows orders.
+
+Clicking outside or close button dismisses the popup.
+
+Admin Profile:
+
+Clicking icon opens profile page.
+
+Editable profile fields (with update functionality).
+
+Dashboard Overview:
+
+Charts/summary cards using dummy data initially.
+
+Smooth animations on load.
+
+Responsive grid layout.
+
+🏬 Shop Management:
+Shop Category:
+
+Lists shops with:
+
+Shop name
+
+Shop image
+
+Description
+
+Styled in card layout, responsive.
+
+List Shop:
+
+Full CRUD functionality (Create, Read, Update, Delete).
+
+Admin can add new shops, edit details, delete shops.
+
+📦 Orders Section:
+Displays order list with:
+
+Product info
+
+Cart summary
+
+Order tracking details (status: pending, shipped, delivered)
+
+💳 Transactions Page:
+Show transaction history, amount, date, shop name, and payment method.
+
+📈 Sales Analytics:
+Include graphs/charts for:
+
+Monthly sales
+
+Top-performing shops
+
+Product trends (use dummy data)
+
+🌐 UI/UX Notes:
+Fully responsive for all screen sizes.
+
+Theme colors and font should match the logo provided (basket.png).
+
+Smooth page transitions, animated cards/graphs.
+
+All pages/components should look like a real, modern website.
+
+🛠 Backend:
+Use Node.js with Express.
+
+MongoDB for storing:
+
+Users (admin login)
+
+Shops
+
+Orders
+
+Transactions
+
+Sales data
+
+Build API endpoints to:
+
+Perform CRUD operations for shops.
+
+List and filter orders.
+
+Update admin profile.
+
+Fetch data for dashboard and analytics.
+
+Connect frontend to backend using Axios or Fetch API.
+
+✅ Requirements Summary:
+All pages bug-free, mobile-friendly.
+
+Clean code structure with reusable components.
+
+Logo-based color theme across all sections.
+
+Full-stack integration: every frontend feature uses actual backend logic.
+
+No hardcoded data unless used as placeholder with proper backend connection later.
+
