@@ -4,9 +4,15 @@ import { shopCategories, type ShopCategory, type InsertShopCategory } from "@sha
 import { orders, type Order, type InsertOrder } from "@shared/schema";
 import { transactions, type Transaction, type InsertTransaction } from "@shared/schema";
 import session from "express-session";
+import type { Store } from "express-session";
 import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { db } from "./db";
+import { eq, and } from "drizzle-orm";
+import { pool } from "./db";
 
 const MemoryStore = createMemoryStore(session);
+const PostgresStore = connectPg(session);
 
 // Interface with all CRUD methods
 export interface IStorage {
@@ -316,4 +322,158 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  sessionStore: session.SessionStore;
+
+  constructor() {
+    this.sessionStore = new PostgresStore({
+      pool,
+      createTableIfMissing: true
+    });
+  }
+
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
+    if (!Object.keys(userData).length) return this.getUser(id);
+    
+    const result = await db.update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    
+    return result[0];
+  }
+
+  // Shop category methods
+  async getShopCategories(): Promise<ShopCategory[]> {
+    return await db.select().from(shopCategories);
+  }
+
+  async getShopCategory(id: number): Promise<ShopCategory | undefined> {
+    const result = await db.select().from(shopCategories).where(eq(shopCategories.id, id));
+    return result[0];
+  }
+
+  async createShopCategory(category: InsertShopCategory): Promise<ShopCategory> {
+    const result = await db.insert(shopCategories).values(category).returning();
+    return result[0];
+  }
+
+  async updateShopCategory(id: number, categoryData: Partial<InsertShopCategory>): Promise<ShopCategory | undefined> {
+    if (!Object.keys(categoryData).length) return this.getShopCategory(id);
+    
+    const result = await db.update(shopCategories)
+      .set(categoryData)
+      .where(eq(shopCategories.id, id))
+      .returning();
+    
+    return result[0];
+  }
+
+  async deleteShopCategory(id: number): Promise<boolean> {
+    const result = await db.delete(shopCategories).where(eq(shopCategories.id, id)).returning();
+    return result.length > 0;
+  }
+
+  // Shop methods
+  async getShops(): Promise<Shop[]> {
+    return await db.select().from(shops);
+  }
+
+  async getShopsByCategory(categoryId: number): Promise<Shop[]> {
+    return await db.select().from(shops).where(eq(shops.categoryId, categoryId));
+  }
+
+  async getShop(id: number): Promise<Shop | undefined> {
+    const result = await db.select().from(shops).where(eq(shops.id, id));
+    return result[0];
+  }
+
+  async createShop(shop: InsertShop): Promise<Shop> {
+    const result = await db.insert(shops).values(shop).returning();
+    return result[0];
+  }
+
+  async updateShop(id: number, shopData: Partial<InsertShop>): Promise<Shop | undefined> {
+    if (!Object.keys(shopData).length) return this.getShop(id);
+    
+    const result = await db.update(shops)
+      .set(shopData)
+      .where(eq(shops.id, id))
+      .returning();
+    
+    return result[0];
+  }
+
+  async deleteShop(id: number): Promise<boolean> {
+    const result = await db.delete(shops).where(eq(shops.id, id)).returning();
+    return result.length > 0;
+  }
+
+  // Order methods
+  async getOrders(): Promise<Order[]> {
+    return await db.select().from(orders);
+  }
+
+  async getOrdersByShop(shopId: number): Promise<Order[]> {
+    return await db.select().from(orders).where(eq(orders.shopId, shopId));
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    const result = await db.select().from(orders).where(eq(orders.id, id));
+    return result[0];
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const result = await db.insert(orders).values(order).returning();
+    return result[0];
+  }
+
+  async updateOrder(id: number, orderData: Partial<InsertOrder>): Promise<Order | undefined> {
+    if (!Object.keys(orderData).length) return this.getOrder(id);
+    
+    const result = await db.update(orders)
+      .set(orderData)
+      .where(eq(orders.id, id))
+      .returning();
+    
+    return result[0];
+  }
+
+  // Transaction methods
+  async getTransactions(): Promise<Transaction[]> {
+    return await db.select().from(transactions);
+  }
+
+  async getTransactionsByOrder(orderId: number): Promise<Transaction[]> {
+    return await db.select().from(transactions).where(eq(transactions.orderId, orderId));
+  }
+
+  async getTransaction(id: number): Promise<Transaction | undefined> {
+    const result = await db.select().from(transactions).where(eq(transactions.id, id));
+    return result[0];
+  }
+
+  async createTransaction(transaction: InsertTransaction): Promise<Transaction> {
+    const result = await db.insert(transactions).values(transaction).returning();
+    return result[0];
+  }
+}
+
+// Use DatabaseStorage instead of MemStorage
+export const storage = new DatabaseStorage();
