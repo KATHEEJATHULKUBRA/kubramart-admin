@@ -2,8 +2,25 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
+    try {
+      // Try to parse as JSON first
+      const data = await res.json();
+      console.error("API Error Response:", {
+        status: res.status,
+        statusText: res.statusText,
+        data
+      });
+      throw new Error(data.message || `${res.status}: ${res.statusText}`);
+    } catch (jsonError) {
+      // If not JSON, get as text
+      const text = await res.text();
+      console.error("API Error Response (text):", {
+        status: res.status,
+        statusText: res.statusText,
+        text
+      });
+      throw new Error(`${res.status}: ${text || res.statusText}`);
+    }
   }
 }
 
@@ -12,11 +29,24 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  console.log(`API Request: ${method} ${url}`, data ? { data } : '');
+  
+  const options = {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+    credentials: "include" as RequestCredentials,
+  };
+  
+  console.log("Request options:", options);
+  
+  const res = await fetch(url, options);
+  
+  console.log(`API Response: ${method} ${url}`, {
+    status: res.status,
+    statusText: res.statusText,
+    ok: res.ok,
+    headers: Object.fromEntries([...res.headers]),
   });
 
   await throwIfResNotOk(res);

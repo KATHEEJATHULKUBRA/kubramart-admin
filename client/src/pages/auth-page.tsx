@@ -21,8 +21,8 @@ import { Loader2 } from "lucide-react";
 
 // Login schema
 const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  username: z.string().trim().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
   rememberMe: z.boolean().optional(),
 });
 
@@ -83,10 +83,16 @@ const AuthPage = () => {
 
   // Handle form submissions
   const onLoginSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate({
-      username: data.username,
-      password: data.password,
-    });
+    console.log("Login attempt with:", { username: data.username });
+    
+    try {
+      loginMutation.mutate({
+        username: data.username,
+        password: data.password,
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
