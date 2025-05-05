@@ -1,5 +1,5 @@
 import React from "react";
-import kubraLogo from "@/assets/images/kubra-logo.png";
+import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
@@ -15,11 +15,11 @@ const Logo: React.FC<LogoProps> = ({ className = "", size = "md" }) => {
   };
 
   return (
-    <div className={`flex items-center ${className}`}>
+    <div className={cn("flex items-center", className)}>
       <img 
-        src={kubraLogo} 
+        src="/src/assets/images/kubra-logo.png" 
         alt="Kubra Market Logo"
-        className={`${sizes[size]} object-contain`}
+        className={cn(sizes[size], "object-contain")}
       />
     </div>
   );
