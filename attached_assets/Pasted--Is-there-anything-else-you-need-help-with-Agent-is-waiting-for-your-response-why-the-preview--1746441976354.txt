@@ -1,0 +1,367 @@
+
+Is there anything else you need help with?
+
+Agent is waiting for your response
+why the preview i log in 
+/auth
+
+Deploy to production
+Publish a live, stable, public version of your App, unaffected by the changes you make in the workspace Learn more.
+Scale up and down to meet demand exactly
+Automatically scales from zero to any level of demand, making it inexpensive for most apps and effortless when you go viral.
+Usage-based pricing. Billed at $0.0000032 per compute unit, plus a fixed cost of $1 per month per deployment.
+Suitable for web apps and stateless APIs.
+Commit
+Create core components and layout for admin panel application
+Initializes the project structure, UI components, and basic layout using React, Vite, and Shadcn.
+
+KU
+
+kubramushthaque
+kubramushthaque
+committed
+7 hours ago
+1 parent 
+Filter changed files
+Showing 100 changed files.
+
+
+Unified
+
+Split
+.gitignore
+Added
+.replit
+Added
+index.html
+client
+Added
+App.tsx
+client/src
+Added
+logo.tsx
+client/src/assets
+Added
+product-trends-chart.tsx
+client/src/components/analytics
+Added
+recent-orders.tsx
+client/src/components/dashboard
+Added
+sales-chart.tsx
+client/src/components/dashboard
+Added
+shop-chart.tsx
+client/src/components/dashboard
+Added
+stat-card.tsx
+client/src/components/dashboard
+Added
+header.tsx
+client/src/components/layout
+Added
+notifications-dropdown.tsx
+client/src/components/layout
+Added
+page-title.tsx
+client/src/components/layout
+Added
+profile-dropdown.tsx
+client/src/components/layout
+Added
+sidebar.tsx
+client/src/components/layout
+Added
+order-status-badge.tsx
+client/src/components/orders
+Added
+order-table.tsx
+client/src/components/orders
+Added
+category-card.tsx
+client/src/components/shop
+Added
+category-form.tsx
+client/src/components/shop
+Added
+shop-card.tsx
+client/src/components/shop
+Added
+shop-form.tsx
+client/src/components/shop
+Added
+transaction-table.tsx
+client/src/components/transactions
+Added
+accordion.tsx
+client/src/components/ui
+Added
+alert-dialog.tsx
+client/src/components/ui
+Added
+alert.tsx
+client/src/components/ui
+Added
+aspect-ratio.tsx
+client/src/components/ui
+Added
+avatar.tsx
+client/src/components/ui
+Added
+badge.tsx
+client/src/components/ui
+Added
+breadcrumb.tsx
+client/src/components/ui
+Added
+button.tsx
+client/src/components/ui
+Added
+calendar.tsx
+client/src/components/ui
+Added
+card.tsx
+client/src/components/ui
+Added
+carousel.tsx
+client/src/components/ui
+Added
+chart.tsx
+client/src/components/ui
+Added
+checkbox.tsx
+client/src/components/ui
+Added
+collapsible.tsx
+client/src/components/ui
+Added
+command.tsx
+client/src/components/ui
+Added
+context-menu.tsx
+client/src/components/ui
+Added
+dialog.tsx
+client/src/components/ui
+Added
+drawer.tsx
+client/src/components/ui
+Added
+dropdown-menu.tsx
+client/src/components/ui
+Added
+form.tsx
+client/src/components/ui
+Added
+hover-card.tsx
+client/src/components/ui
+Added
+input-otp.tsx
+client/src/components/ui
+Added
+input.tsx
+client/src/components/ui
+Added
+label.tsx
+client/src/components/ui
+Added
+menubar.tsx
+client/src/components/ui
+Added
+navigation-menu.tsx
+client/src/components/ui
+Added
+pagination.tsx
+client/src/components/ui
+Added
+popover.tsx
+client/src/components/ui
+Added
+progress.tsx
+client/src/components/ui
+Added
+radio-group.tsx
+client/src/components/ui
+Added
+resizable.tsx
+client/src/components/ui
+Added
+scroll-area.tsx
+client/src/components/ui
+Added
+select.tsx
+client/src/components/ui
+Added
+separator.tsx
+client/src/components/ui
+Added
+sheet.tsx
+client/src/components/ui
+Added
+sidebar.tsx
+client/src/components/ui
+Added
+skeleton.tsx
+client/src/components/ui
+Added
+slider.tsx
+client/src/components/ui
+Added
+switch.tsx
+client/src/components/ui
+Added
+table.tsx
+client/src/components/ui
+Added
+tabs.tsx
+client/src/components/ui
+Added
+textarea.tsx
+client/src/components/ui
+Added
+toast.tsx
+client/src/components/ui
+Added
+toaster.tsx
+client/src/components/ui
+Added
+toggle-group.tsx
+client/src/components/ui
+Added
+toggle.tsx
+client/src/components/ui
+Added
+tooltip.tsx
+client/src/components/ui
+Added
+use-auth.tsx
+client/src/hooks
+Added
+use-mobile.tsx
+client/src/hooks
+Added
+use-toast.ts
+client/src/hooks
+Added
+index.css
+client/src
+Added
+protected-route.tsx
+client/src/lib
+Added
+queryClient.ts
+client/src/lib
+Added
+utils.ts
+client/src/lib
+Added
+main.tsx
+client/src
+Added
+analytics-page.tsx
+client/src/pages
+Added
+auth-page.tsx
+client/src/pages
+Added
+dashboard-page.tsx
+client/src/pages
+Added
+not-found.tsx
+client/src/pages
+Added
+orders-page.tsx
+client/src/pages
+Added
+profile-page.tsx
+client/src/pages
+Added
+shop-category-page.tsx
+client/src/pages
+Added
+shop-list-page.tsx
+client/src/pages
+Added
+transactions-page.tsx
+client/src/pages
+Added
+components.json
+Added
+drizzle.config.ts
+Added
+package-lock.json
+Added
+package.json
+Added
+postcss.config.js
+Added
+auth.ts
+server
+Added
+index.ts
+server
+Added
+routes.ts
+server
+Added
+storage.ts
+server
+Added
+vite.ts
+server
+Added
+schema.ts
+shared
+Added
+tailwind.config.ts
+Added
+tsconfig.json
+Added
+vite.config.ts
+Added
+9m
+ • 
+10 minutes ago
+Port :5000 opened on
+You can manage this config in the
+@echo off
+echo Starting Kubra Market Admin Panel...
+set NODE_ENV=development
+npx tsx server/index.ts
+/**
+ * Kubra Market Admin - Easy Login Script
+ * Copy and paste this entire script into your browser console when on the /auth page
+ */
+
+(function () {
+  // Admin credentials
+  const credentials = {
+    username: "admin",
+    password: "admin123",
+  };
+
+  // Find the form inputs and fill them
+  const usernameInput = document.querySelector('input[placeholder="admin"]');
+  const passwordInput = document.querySelector('input[type="password"]');
+  const loginButton = document.querySelector('button[type="submit"]');
+
+  if (usernameInput && passwordInput && loginButton) {
+    // Simulate typing
+    usernameInput.value = credentials.username;
+    passwordInput.value = credentials.password;
+
+    // Trigger events to activate the form
+    usernameInput.dispatchEvent(new Event("input", { bubbles: true }));
+    passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
+
+    // Submit the form
+    loginButton.click();
+
+    console.log("Login credentials applied! Logging in...");
+  } else {
+    console.error(
+      "Could not find login form elements. Make sure you are on the /auth page.",
+    );
+  }
+})();
+

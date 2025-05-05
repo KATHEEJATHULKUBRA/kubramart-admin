@@ -232,6 +232,18 @@ export class MemStorage implements IStorage {
 
   // Seed initial data for testing
   private seedSampleData() {
+    // Create admin user
+    const adminUser: User = {
+      id: this.userCurrentId++,
+      username: "admin",
+      password: "5b78418e937247662894f3c8f0aa584a9d547f49574beb49ca403d0fcd6c9a890c861c2c2455d846d042a21506bc261deebe04a8db84fddd70c024b701f56441.69b717d31c5e2a4c415b5d97add8ee6a", // admin123
+      firstName: "Admin",
+      lastName: "User",
+      email: "admin@example.com",
+      avatar: null
+    };
+    this.users.set(adminUser.id, adminUser);
+    
     // Categories
     const groceryCategory: ShopCategory = {
       id: this.categoryCurrentId++,
