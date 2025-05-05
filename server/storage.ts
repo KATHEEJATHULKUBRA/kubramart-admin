@@ -51,7 +51,7 @@ export interface IStorage {
   createTransaction(transaction: InsertTransaction): Promise<Transaction>;
   
   // Session store for authentication
-  sessionStore: session.SessionStore;
+  sessionStore: Store;
 }
 
 export class MemStorage implements IStorage {
@@ -65,7 +65,7 @@ export class MemStorage implements IStorage {
   private shopCurrentId: number;
   private orderCurrentId: number;
   private transactionCurrentId: number;
-  sessionStore: session.SessionStore;
+  sessionStore: Store;
 
   constructor() {
     this.users = new Map();
@@ -323,7 +323,7 @@ export class MemStorage implements IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: Store;
 
   constructor() {
     this.sessionStore = new PostgresStore({
