@@ -7,9 +7,8 @@ import session from "express-session";
 import type { Store } from "express-session";
 import createMemoryStore from "memorystore";
 import connectPg from "connect-pg-simple";
-import { db } from "./db";
+import { db, pool } from "./db";
 import { eq, and } from "drizzle-orm";
-import { pool } from "./db";
 
 const MemoryStore = createMemoryStore(session);
 const PostgresStore = connectPg(session);
@@ -338,24 +337,43 @@ export class DatabaseStorage implements IStorage {
   sessionStore: Store;
 
   constructor() {
-    this.sessionStore = new PostgresStore({
-      pool,
-      createTableIfMissing: true
-    });
+    // Check if pool is available (it might be undefined in development without DATABASE_URL)
+    if (pool) {
+      this.sessionStore = new PostgresStore({
+        pool,
+        createTableIfMissing: true
+      });
+    } else {
+      console.warn('Database pool not available, using in-memory session store instead');
+      this.sessionStore = new MemoryStore({
+        checkPeriod: 86400000, // 24 hours
+      });
+    }
   }
 
   // User methods
   async getUser(id: number): Promise<User | undefined> {
+    if (!db) {
+      console.warn('Database not available, using empty result');
+      return undefined;
+    }
     const result = await db.select().from(users).where(eq(users.id, id));
     return result[0];
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
+    if (!db) {
+      console.warn('Database not available, using empty result');
+      return undefined;
+    }
     const result = await db.select().from(users).where(eq(users.username, username));
     return result[0];
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    if (!db) {
+      throw new Error('Database not available, cannot create user');
+    }
     const result = await db.insert(users).values(insertUser).returning();
     return result[0];
   }

@@ -1,87 +1,85 @@
-# Running Kubra Market Admin Panel on Windows
+# Windows Setup Guide for Kubra Market Admin
 
-This guide will help you run the Kubra Market Admin Panel on Windows without requiring a database.
+This guide provides instructions for setting up and running the Kubra Market Admin application on Windows systems.
 
 ## Prerequisites
-- Node.js (version 16 or later)
-- npm (comes with Node.js)
-- VS Code or another code editor
 
-## Setup Steps
+1. **Node.js**: Make sure you have Node.js installed (v16 or higher).
+   - Download from [nodejs.org](https://nodejs.org/)
+   - Verify installation by running `node -v` in Command Prompt or PowerShell
 
-### 1. Clone or download the repository
-Download the project and extract it to a folder of your choice.
+2. **Git**: Install Git for Windows
+   - Download from [git-scm.com](https://git-scm.com/download/win)
 
-### 2. Open the project folder in VS Code
-- Open VS Code
-- Go to File -> Open Folder
-- Select the project's root folder (not the client subfolder)
+## Installation Steps
 
-### 3. Install dependencies
-Open a terminal in VS Code (Terminal -> New Terminal) and run:
-```
-npm install
-```
+1. **Clone or Download the Repository**
+   - Clone using Git: `git clone <repository-url>`
+   - Or download and extract the ZIP file
 
-### 4. Start the application
+2. **Install Dependencies**
+   - Open Command Prompt or PowerShell in the project directory
+   - Run: `npm install`
 
-#### Option 1: Using the provided batch file
-Simply double-click the `start-app.bat` file in the project's root directory, or run it from the terminal:
-```
-.\start-app.bat
-```
+3. **Configure Environment**
+   - Copy `.env.example` to `.env`
+   - Edit `.env` file to set any custom configuration
+   - Note: For local development, you don't need to set up a database
 
-#### Option 2: Using npx directly
-Run the following command in your terminal:
-```
-set NODE_ENV=development && npx tsx server/index.ts
-```
+## Running the Application
 
-#### Option 3: Using cross-env (recommended for different environments)
-We've installed the cross-env package which makes it easier to set environment variables across platforms:
-```
-npx cross-env NODE_ENV=development tsx server/index.ts
-```
+### Option 1: Using the Batch File (Recommended)
 
-### 5. Access the application
-Open your browser and navigate to:
-```
-http://localhost:5000
-```
+The easiest way to run the application on Windows is using the provided batch file:
 
-You should see the login page for the Kubra Market Admin Panel.
+1. Double-click on `start-app.bat` in the project directory
+   - Or run it from Command Prompt: `.\start-app.bat`
 
-## Login Credentials
-Use these credentials to log in:
-- Username: `admin`
-- Password: `admin123`
+2. The application will start using in-memory storage (no database needed)
 
-These credentials are for the default admin user that is automatically created in the in-memory storage.
+3. Open your browser and navigate to: `http://localhost:5000`
 
-## Notes
-- This setup uses in-memory storage, so no database connection is required
-- All data will be reset when the server restarts
-- The application includes sample data for testing
-- Changes made during a session will be lost when the server stops
+4. Log in with the default credentials:
+   - Username: `admin`
+   - Password: `admin123`
+
+### Option 2: Using npm with cross-env
+
+If you prefer using npm commands:
+
+1. Open Command Prompt or PowerShell in the project directory
+
+2. Run the following command:
+   ```
+   npx cross-env NODE_ENV=development npx tsx server/index.ts
+   ```
+
+3. Access the application at: `http://localhost:5000`
 
 ## Troubleshooting
 
-### "tsx is not recognized as an internal or external command"
-This can happen if the global node_modules path is not in your system's PATH. Try using the npx prefix:
-```
-npx tsx server/index.ts
-```
+### Issue: "NODE_ENV is not recognized as an internal or external command"
+- Solution: Use the batch file `start-app.bat` or use the cross-env approach
 
-### Port 5000 is already in use
-If port 5000 is already in use, you'll need to modify the server to use a different port:
-1. Open `server/index.ts`
-2. Find the line that sets the port (likely `const PORT = process.env.PORT || 5000;`)
-3. Change 5000 to another port (e.g., 3000)
-4. Save and restart the application
+### Issue: Application fails to start with database errors
+- Solution: The application is set up to use in-memory storage by default
+- Make sure you're not trying to use DATABASE_URL in your environment
 
-### Other issues
-If you encounter other issues, try:
-1. Delete the `node_modules` folder
-2. Run `npm install` again
-3. Restart your computer
-4. Try running the application again
+### Issue: Windows Security Warning
+- Solution: If Windows shows a security warning when running the batch file, click "More info" and then "Run anyway"
+
+### Issue: Port Already in Use
+- Solution: Change the port in your .env file (e.g., PORT=3000)
+
+## Setting Up a Database (Optional)
+
+If you want to use a real database:
+
+1. Install PostgreSQL locally or use a cloud service
+2. Set DATABASE_URL in your .env file
+3. Edit start-app.bat to use your database connection
+
+## Additional Resources
+
+- Check the `ENVIRONMENT.md` file for details on configuring environment variables
+- Check the `NETLIFY-DEPLOYMENT.md` file for information on deploying to Netlify
