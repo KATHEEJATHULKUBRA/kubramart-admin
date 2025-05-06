@@ -1,5 +1,25 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
+// Helper to determine if we're running on Netlify
+const isNetlify = () => {
+  return window.location.hostname.includes('netlify.app') || import.meta.env.VITE_USE_NETLIFY === 'true';
+};
+
+// Helper to transform API paths for Netlify functions if needed
+const transformApiPath = (path: string) => {
+  if (!isNetlify()) return path;
+  
+  // If it's already a .netlify/functions path, don't modify it
+  if (path.includes('/.netlify/functions/')) return path;
+  
+  // Transform /api/* paths to /.netlify/functions/api/*
+  if (path.startsWith('/api/')) {
+    return path.replace('/api/', '/.netlify/functions/api/');
+  }
+  
+  return path;
+};
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     try {
@@ -29,24 +49,27 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  console.log(`API Request: ${method} ${url}`, data ? { data } : '');
+  // Transform API path for Netlify if needed
+  const transformedUrl = transformApiPath(url);
   
-  const options = {
+  console.log(`API Request: ${method} ${transformedUrl}`, data ? { data } : '');
+  
+  const options: RequestInit = {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: data ? { "Content-Type": "application/json" } : undefined,
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include" as RequestCredentials,
+    credentials: "include",
   };
   
   console.log("Request options:", options);
   
-  const res = await fetch(url, options);
+  const res = await fetch(transformedUrl, options);
   
-  console.log(`API Response: ${method} ${url}`, {
+  console.log(`API Response: ${method} ${transformedUrl}`, {
     status: res.status,
     statusText: res.statusText,
     ok: res.ok,
-    headers: Object.fromEntries([...res.headers]),
+    headers: Object.fromEntries(Array.from(res.headers.entries())),
   });
 
   await throwIfResNotOk(res);
@@ -59,7 +82,10 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    // Transform API path for Netlify if needed
+    const transformedPath = transformApiPath(queryKey[0] as string);
+    
+    const res = await fetch(transformedPath, {
       credentials: "include",
     });
 
