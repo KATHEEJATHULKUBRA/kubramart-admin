@@ -29,8 +29,8 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
-  // Use a secure SESSION_SECRET in production
-  const sessionSecret = process.env.SESSION_SECRET || "kubra-market-admin-secret";
+  // Use SESSION_SECRET from environment variables
+  const sessionSecret = process.env.SESSION_SECRET || "kubra-market-admin-secret-key-123";
   
   const sessionSettings: session.SessionOptions = {
     secret: sessionSecret,
