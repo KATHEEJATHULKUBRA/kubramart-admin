@@ -40,15 +40,39 @@ These settings are already defined in the `netlify.toml` file, but it's good to 
 
 For the backend functionality, you'll need a PostgreSQL database:
 
-### Option 1: Neon (Serverless PostgreSQL)
+### Option 1: Neon (Serverless PostgreSQL - Recommended for Netlify)
 1. Create a free account on [Neon](https://neon.tech/)
 2. Create a new project and database
 3. Copy the connection string and set it as the `DATABASE_URL` environment variable in Netlify
+4. Neon works exceptionally well with Netlify's serverless functions due to its WebSocket connection support
 
 ### Option 2: Supabase
 1. Create a free account on [Supabase](https://supabase.com/)
 2. Create a new project and get the PostgreSQL connection details
 3. Use these details to form a connection string and set it as the `DATABASE_URL` in Netlify
+
+### Option 3: ElephantSQL
+1. Create a free account on [ElephantSQL](https://www.elephantsql.com/)
+2. Create a new instance (free tier provides 20MB storage)
+3. Get the connection URL from the instance details page
+4. Set it as the `DATABASE_URL` environment variable in Netlify
+
+### Setting Up Database Tables
+After connecting to your database, you need to run migrations:
+
+1. Install the Netlify CLI tool: `npm install -g netlify-cli`
+2. Log in to your Netlify account: `netlify login`
+3. Link your local project to the Netlify site: `netlify link`
+4. Set up environment variables locally:
+   ```bash
+   netlify env:import .env.netlify
+   ```
+5. Use Drizzle to push the schema to your database:
+   ```bash
+   netlify dev:exec npm run db:push
+   ```
+
+This will create all the necessary tables in your database.
 
 ## Step 6: Deploy
 
