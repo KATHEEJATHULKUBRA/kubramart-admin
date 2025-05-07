@@ -27,7 +27,7 @@ const Sidebar = ({ className }: SidebarProps) => {
 
   const navigationItems = [
     { title: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
-    { title: 'Shop FileSliders', icon: <FileSliders size={20} />, path: '/shop-categories' },
+    { title: 'Shop Category', icon: <FileSliders size={20} />, path: '/shop-categories' },
     { title: 'List Shop', icon: <Store size={20} />, path: '/shops' },
     { title: 'Orders', icon: <ShoppingCart size={20} />, path: '/orders' },
     { title: 'Transactions', icon: <Receipt size={20} />, path: '/transactions' },
@@ -43,7 +43,7 @@ const Sidebar = ({ className }: SidebarProps) => {
   };
 
   return (
-    <aside 
+    <aside
       className={cn(
         "sidebar bg-white dark:bg-sidebar border-r h-full overflow-y-auto",
         collapsed ? "w-16" : "w-64",
@@ -57,33 +57,33 @@ const Sidebar = ({ className }: SidebarProps) => {
             <h1 className="text-lg font-semibold truncate">Kubra Market</h1>
           )}
         </div>
-        <button 
+        <button
           onClick={handleToggleCollapse}
           className="p-1 rounded-md hover:bg-gray-100 text-gray-500"
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
-      
+
       <nav className="p-3">
         <ul className="space-y-1">
           {navigationItems.map((item) => {
-            const isActive = item.path === '/' 
-              ? location === item.path 
+            const isActive = item.path === '/'
+              ? location === item.path
               : location.startsWith(item.path);
-            
+
             return (
               <li key={item.path}>
                 {collapsed ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Link 
+                        <Link
                           href={item.path}
                           className={cn(
                             "flex items-center justify-center p-2 rounded-lg transition-colors",
-                            isActive 
-                              ? "bg-primary/10 text-primary border-l-4 border-primary" 
+                            isActive
+                              ? "bg-primary/10 text-primary border-l-4 border-primary"
                               : "text-gray-600 hover:bg-gray-100"
                           )}
                         >
@@ -96,12 +96,12 @@ const Sidebar = ({ className }: SidebarProps) => {
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
-                  <Link 
+                  <Link
                     href={item.path}
                     className={cn(
                       "flex items-center px-3 py-2 rounded-lg transition-colors",
-                      isActive 
-                        ? "bg-primary/10 text-primary border-l-4 border-primary" 
+                      isActive
+                        ? "bg-primary/10 text-primary border-l-4 border-primary"
                         : "text-gray-600 hover:bg-gray-100"
                     )}
                   >
@@ -118,13 +118,13 @@ const Sidebar = ({ className }: SidebarProps) => {
             );
           })}
         </ul>
-        
+
         <div className="pt-6 mt-6 border-t border-gray-200">
           {collapsed ? (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex items-center justify-center w-full p-2 text-red-500 rounded-lg hover:bg-gray-100"
                   >
@@ -135,7 +135,7 @@ const Sidebar = ({ className }: SidebarProps) => {
               </Tooltip>
             </TooltipProvider>
           ) : (
-            <button 
+            <button
               onClick={handleLogout}
               className="flex items-center w-full px-3 py-2 text-red-500 rounded-lg hover:bg-gray-100"
             >
